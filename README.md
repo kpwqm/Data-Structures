@@ -32,6 +32,26 @@ var Stack = function(){
 
 ```
 此外，在学习中会提到一种情况。回文(一个单词、短语、数字，正序倒序排列一样)，使用栈可以轻松判断一个字符串是否回文。
+以下是方法的实现。
+```javascript
+
+var isPalindrome = function (word){
+  var s = new Stack();
+  for (var i = 0; i < word.length; ++i){
+    s.push(word[i]);
+  }
+  var rword = "";
+  while (s.length() > 0){
+    rword += s.pop();
+  }
+  if (word == rword){
+    return true;
+  }else{
+    return false;
+  }
+}
+
+```
 
 
 ##队列 - Queue

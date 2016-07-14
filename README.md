@@ -1,5 +1,12 @@
 #Data Structures & Algorithms with JavaScript
+##Directory  
 
+[1.栈 - Stack](#stack)  
+[2.列表 - List](#list)     
+[3.队列 - Queue](#queue)    
+
+
+<a name="stack"></a>
 ##栈 - Stack
 栈，是一种后进先出(LIFO)的数据结构，只能在栈顶添加或删除，所以如果对对象进行添加或删除等操作使用栈更友好。但在查找数据操作方面不那么友好。
 ###如下面实现栈类的实现代码
@@ -53,7 +60,10 @@ var isPalindrome = function (word){
 
 ```
 
+<a name="list"></a>
+##列表 - List
 
+<a name="queue"></a>
 ##队列 - Queue
 队列是一种列表的实现，先进先出(FIFO)。与栈不一样。队列主要两种操作：插入操作(入队,在队尾插入新元素)，删除操作(出队，在队头删除元素)。
 ###如下面实现栈类的实现代码
@@ -95,4 +105,34 @@ var Queue = function(){
   this.empty = empty;
 }
 
+```
+这次的数据结构知识学习，主要原因是在工作中是遇到需要排序的问题。因此对于排序方面的知识比较敏感。在书中提到可以使用队列来模拟**基数排序**。什么是基数排序呢，某科解释：基数排序（radix sort）属于“分配式排序”（distribution sort），又称“桶子法”，顾名思义，它是透过键值的部份资讯，将要排序的元素分配至某些“桶”中，藉以达到排序的作用，基数排序法是属于稳定性的排序，其时间复杂度为O (nlog(r)m)，其中r为所采取的基数，而m为堆数，在某些时候，基数排序法的效率高于其它的稳定性排序法。  
+
+例如对0~99的数字进行排序，排序过程需要对数集扫描两次。先扫描个位上的数字进行排序，然后扫描十位上的数字进行排序，然后每个数字放到不同的“桶”中。
+###如下面的实现代码
+```javascript
+var distribute = function (nums, queues, n, digit){
+  for (var i = 0; i < n; ++i){
+    if (digit == 1){
+      queues[nums[i] % 10].enqueue(nums[i]);
+    }else{
+      queues[Math.floor(nums[i] / 10)].enqueue(nums[i]);
+    }
+  }
+}  
+var collect = function (queues, nums){
+  var i = 0;
+  for (var digit = 0; digit < 10; ++digit){
+    while (!queues[digit].empty()) {
+      nums[i++] = queues[digit].dequeue();
+    }
+  }
+}  
+var dispArray = function (arr){
+  var putstr = [];
+  for (var i = 0; i < arr.length; ++i){
+    putstr += arr[i] + " ";
+  }
+  return putstr;
+}
 ```

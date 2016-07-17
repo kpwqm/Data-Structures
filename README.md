@@ -44,7 +44,7 @@ var Stack = function(){
 
 var isPalindrome = function (word){
   var s = new Stack();
-  for (var i = 0; i < word.length; ++i){
+  for (var i = 0; i < word.length; i++){
     s.push(word[i]);
   }
   var rword = "";
@@ -62,6 +62,104 @@ var isPalindrome = function (word){
 
 <a name="list"></a>
 ##列表 - List
+列表是一组有序的数据，每个数据项称为元素。对于javascript，列表中的元素可以是任意数据类型。列表能保存元素的数量并没有理论上的限定，但其数量受程序内存的限制。
+列表用于数据结构不那么复杂的情况，例如当不需要在一个很长的序列中查找元素或者排序时，列表显得龙为有用。
+
+:------------- |:-------------  
+ listSize(attr)| 列表中的元素个数  
+ pos(attr)      | 列表的当前位置  
+ length(attr)  | 返回列表中元素的个数  
+
+ ###列表List类的实现代码
+ ```javascript
+var append = function (element){	//给列表添加元素
+	this.dataStore[this.listSize++] = element;
+}
+var find = function (element){	//在列表中查找某一元素
+	for (var i = 0, l = this.dataStore.length; i < l; i++){
+		if (this.dataStore[i] == element){
+			return i;
+		}
+	}
+	return -1;
+}
+var contains = function (element){	//判断给定值是否在列表中
+	for (var i = 0, l = this.dataStore.length; i++){
+		if (this.dataStore[i] == element){
+			return true;
+		}
+	}
+	return false;
+}
+var remove = function (element){	//在列表中删除元素
+	var index = this.find(element);
+	if (~index){
+		this.dataStore.splice(index, 1);
+		--this.listSize;
+		return true;
+	}
+	return false;
+}
+var length = function (){	//列表中有多少个元素
+	return this.listSize;
+}
+var toString = function (){	//显示列表中的元素
+	return this.dataStore;
+}
+var insert = function (element, after){	//向列表中插入一个元素
+	var insertPos = this.find(after);
+	if (!insertPos){
+		this.dataStore.splice(insertPos+1, 0, element);
+		this.listSize++;
+		return true;
+	}
+	return false;
+}
+var clear = function (){	//清空列表中所有的元素
+	delete this.dataStore;
+	this.dataStore.length = 0;
+	this.listSize = this.pos = 0;
+}
+var List = function (){
+	this.dataStore = [];	//初始化一个空数组用来保存列表元素
+	this.listSize = 0;
+	this.pos = 0;
+	this.clear = clear;
+	this.find = find;
+	this.toString = toString;
+	this.insert = insert;
+	this.append = append;
+	this.remove = remove;
+	this.front = front;
+	this.end = end;
+	this.prev = prev;
+	this.next = next;
+	this.length = length;
+	this.currPos = currPos;
+	this.moveTo = moveTo;
+	this.getElement = getElement;
+	this.contains = contains;
+}
+```
+###使用迭代器访问列表
+和使用数据索引的方式对比，使用迭代器的几个优点：
+1.使用迭代器，访问列表元素时不必关心底层的数据结构。
+2.当为列表添加一个新的元素时，索引的值就不对了，此时只用更新列表，而不用更新迭代器。
+3.可以用不同类型的数据存储方式实现cList类，迭代器为访问列表里的元素提供了一种统一的方式
+###例子
+```javascript
+for (names.front(); names.currPos() < names.length(); names.next()){
+  //循环从第一个元素开始，当currPos的值小于列表的长度，每一次循环都调用next()方法将当前位置向前移动一位
+  console.log(names.getElement());
+}
+
+//从后向前遍历列表
+for (names.end(); names.currPos() >= 0; names.prev()){
+  //循环从列表的最后一个元素开始，当当前位置大于或等于0时，调用prev()方法后移一位
+  console.log(names.getElement());
+}
+```
+迭代器只用来在列表上随意移动元素，而不应该和任何为列表增加或删除元素的方法一起使用。
 
 <a name="queue"></a>
 ##队列 - Queue

@@ -4,6 +4,7 @@
 [1.栈 - Stack](#stack)  
 [2.列表 - List](#list)     
 [3.队列 - Queue](#queue)    
+[4.链表 - LinkedList](#LinkedList)
 
 
 <a name="stack"></a>
@@ -58,6 +59,21 @@ var isPalindrome = function (word){
   }
 }
 
+```
+使用栈模拟递归过程
+```javascript
+//模拟阶乘
+var factorial =  function (n){
+  var s = new Stack();
+  while (n > 1) {
+    s.push(n--);
+  }
+  var product = 1;
+  while (s.length > 0) {
+    product *= s.pop();
+  }
+  return product;
+}
 ```
 
 <a name="list"></a>
@@ -230,3 +246,6 @@ var dispArray = function (arr){
   return putstr;
 }
 ```
+
+<a name="stack"></a>
+##链表 - LinkedList

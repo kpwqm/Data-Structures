@@ -247,7 +247,7 @@ var dispArray = function (arr){
 }
 ```
 
-<a name="stack"></a>
+<a name="LinkedList"></a>
 ##链表 - LinkedList  
 ###定义  
 链表是由一组*节点*组成的集成。每个节点都使用一个对象的引用指向它的后一个节点，指向另一个节点的引用叫做*链*。

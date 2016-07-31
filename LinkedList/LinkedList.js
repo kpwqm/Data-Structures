@@ -16,8 +16,9 @@ var LinkedList = function (){
 	this.head = new Node("head");
 	this.find = find;
 	this.insert = insert;
-	this.remove = remove;
 	this.display = display;
+	this.findPrevious = findPrevious;
+	this.remove = remove;
 }
 /**
  * 插入新节点 - insert()
@@ -47,5 +48,22 @@ var display = function (){
 	while (!(currNode.next == null)) {
 		console.log(currNode.next.element);
 		currNode = currNode.next;
+	}
+}
+/**
+ * 从链表中删除节点时，是使待删除节点的前面的节点的next属性指向待删除节点的下一个节点。
+ * 因此需要先从链表中找到待删除节点前面的节点，这里定义findPrevious()方法。然后修改其next属性。
+ */
+var findPrevious = function (item){
+	var currNode = this.head;
+	while (currNode.next != null && currNode.next.element != item){
+		currNode = currNode.next;
+	}
+	return currNode;
+}
+var remove = function (item){
+	var prevNode = this.findPrevious(item);
+	if (prevNode.next != null){
+		prevNode.next = prevNode.next.next;
 	}
 }

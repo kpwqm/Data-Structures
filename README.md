@@ -5,6 +5,8 @@
 [2.列表 - List](#list)     
 [3.队列 - Queue](#queue)    
 [4.链表 - LinkedList](#linkedlist)
+[5.字典 - Dictionary](#dictionary)
+[6.集合 - Set](#set)
 
 
 <a name="stack"></a>
@@ -419,4 +421,191 @@ var display = function (){
 ###拓展
 advance(n)  //在链表中向前移动n个节点
 back(n) //在双向链表中向后移动n个节点
-show()  //只显示当前节点
+show()  //只显示当前节点  
+
+<a name="dictionary"></a>
+##字典 - Dictionary  
+字典是一种以键 - 值对的形式进行存储数据的数据结构。其Dictionary类的基础是Array类而不是Object类。
+下面定义一个Dictionary类
+```javascript
+/**
+ * 定义字典Dictionary类
+ */
+var Dictionary = function (){
+	this.datastore = new Array();
+	this.add = add;
+	this.find = find;
+	this.remove = remove;
+	this.showAll = showAll;
+	this.count = count;
+	this.clear = clear;
+}
+/**
+ * add() - 添加元素到字典
+ */
+var add = function (key, value){
+	this.datastore[key] = value;
+}
+/**
+ * find() - 查找指定key的元素
+ */
+var find = function (key){
+	return this.datastore[key];
+}
+/**
+ * remove() - 删除指定key的元素
+ */
+var remove = function (key){
+	delete this.datastore[key];
+}
+/**
+ * showAll() - 显示字典全部元素
+ */
+var showAll = function (){
+	var datakeys = Array.prototype.slice.call(Object.keys(this.datastore));
+	console.log('>>>>>>', datakeys)
+	for(var key in datakeys){
+		console.log(datakeys[key] + " -> " + this.datastore[datakeys[key]])
+	}
+}
+/**
+ * count() - 计算字典中元素个数
+ * 为什么不用length属性呢，是因为当键的类型为字符串时，length属性无效。
+ * var nums() = new Array();
+ * nums[0] = 1;
+ * nums[1] = 2;
+ * console.log(nums.length);	//	2
+ * ========================
+ * var arr = new Array();
+ * arr["man"] = 1;
+ * arr["wu"] = 2;
+ * console.log(arr.length);	//	0
+ */
+var count = function (){
+	var n = 0;
+	for(var key in Object.keys(this.datastore)){
+		++n;
+	}
+	return n;
+}
+/**
+ * clear() - 清空字典
+ */
+var clear = function (){
+	for each (var key in Object.keys(this.datastore)){
+		delete this.datastore[key];;
+	}
+}
+```
+另外，很多时候用户想要看到的是有序的数据，所以需要为Dictionary类添加排序功能。由于存在以字符串作为键的字典，则直接对数组排序是无效的。为了达到我们想要的排序效果，我们需要*从数组datastore拿到键后，调用sore()或者其他排序方法对键重新排序*，则返回排序的字典。  
+
+思考：使用字典实现MapReduce中的单词计数的demo。
+
+<a name="set"></a>
+##集合 - Set  
+集合是一种包含不同元素的数据结构，集合中的成员是无序的并且不允许相同成员存在。关注ES6的鞋单会知道，在ES6里新增加这种数据结构。类似于数组。
+Set类的实现基于数组，数组用来存储数据。其中对集合的基本操作有 *并集*、*交庥*、*补集* 、*子集* 。
+直接抛代码吧。下面定义Set()构造函数：
+```javascript
+var Set = function (){
+	this.dataStore = [];
+	this.add = add;
+	this.remove = remove;
+	this.show = show;
+	this.size = size;
+	this.contains = contains;
+	this.union = union;
+	this.intersect = intersect;
+	this.subset = subset;
+	this.difference = difference;
+}
+var add = function (data){
+	if (!~this.dataStore.indexOf(data)){	//不存在成员
+		this.dataStore.push(data);
+		return true;
+	}else {
+		return false;
+	}
+}
+var remove = function (data){
+	var pos = this.dataStore.indexOf(data);
+	if (~pos){	//存在成员
+		this.dataStore.splice(pos, 1);
+		return true;
+	}else {
+		return false;
+	}
+}
+var show = function (){
+	return this.dataStore;
+}
+var size = function (){
+	return this.dataStore.length();
+}
+var contains = function (data){
+	if (~this.dataStore.indexOf(data)){
+		return true;
+	}else{
+		return false;
+	}
+}
+/**
+ * union() - 求两个集合的并集
+ * 首先将第一个集合里的成员加入一个临时集合，然后判断第二个集合中的成员是否同时属于第一个集合，如果属于则跳过该成员，否则将该成员加入临时集合，最后返回此临时集合
+ */
+var union = function (set){
+	var tempSet = new Set();
+	for (var i = 0, l = this.dataStore.length; i < l; i++){
+		tempSet.add(this.dataStore[i]);
+	}
+	for (var i = 0, l = set.dataStore.length; i < l; i++){
+		if (!tempSet.contains(set.dataStore[i])){
+			tempSet.dataStore.push(set.dataStore[i]);
+		}
+	}
+	return tempSet;
+}
+/**
+ * intersect() - 求两集合的交集
+ * 当发现第一个集合的成员也属于第二个集合时，便将该成员加入一个新集合，循环后返回此新集合
+ */
+var intersect = function (set){
+	var tempSet = new Set();
+	for (var i = 0, l = this.dataStore.length; i < l; i++){
+		if (set.contains(this.dataStore[i])){
+			tempSet.add(this.dataStore[i]);
+		}
+	}
+	return tempSet;
+}
+/**
+ * subset() - 判断集合是否为子集
+ * 首先判断两集合的长度，如果该集合比待比较的集合还要大，则该集合肯定不会是待比较集合的一个子集
+ * 当长度满足时，再判断集合内的成员是否属于待比较集合。若存在任意一个成员不属于待比较集合，则返回false
+ */
+var subset = function (set){
+	if (this.size() > set.size()){
+		return false
+	}else{
+		for each (var member in this.dataStore){
+			if (!set.contains(member)){
+				return false;
+			}
+		}
+	}
+	return true;
+}
+/**
+ * difference() - 求两个集合的补集
+ * 返回一个新集合，该集合包含的是那些属于第一个集合但不属于第二个集合的成员
+ */
+var difference = function (set){
+	var tempSet = new Set();
+	for (var i = 0, l = this.dataStore.length; i < l; i++){
+		if (!set.contains(this.dataStore[i])){
+			tempSet.add(this.dataStore[i]);
+		}
+	}
+	return tempSet;
+}
+```

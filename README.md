@@ -8,6 +8,7 @@
 [5.字典 - Dictionary](#dictionary)  
 [6.集合 - Set](#set)  
 [7.散列 - Hash](#hash)
+[8.二叉树 - Binary Tree](#binarytree)
 
 
 <a name="stack"></a>
@@ -827,4 +828,71 @@ var get = function (key){
 	}
 	return undefined;
 }
+```  
+
+
+<a name="binarytree"></a>
+##二叉树 - Binary Tree  
+
+树是一种非线性的数据结构，以分层的方式存储数据。在这里主要学习*二叉树*  
+树由一组以 *边* 连续的 *节点* 组成。  
+一棵树最上面的节点称为 *根节点* ，如果一个节点下面连接多个节点，那么该节点被称为 *父节点* ，它下面的节点称为 *子节点* 。没有任何子节点的节点称为 *叶子节点* 。  
+二叉树子节点个数不超过两个，有两个子节点时称之为*左节点*和*右节点*，并且左节点比右节点相对较小。因为在二叉树中操作数据的插入、查找和删除是非常高效的。  
+下面实现二叉查找树
+```javascript
+var Node = function (data, left, right){
+	this.data = data;
+	this.left = left;
+	this.right = right;
+	this.show = show;
+}
 ```
+```javascript
+var show = function (){
+	return this.data;
+}
+```
+```javascript
+var BST = function (){
+	this.root = null;
+	this.insert = insert;
+	this.inOrder = inOrder;
+}
+```
+/**
+ * [insert 向树中加入新节点]
+ * 首先创建一个Node对象用来存储相应数据。
+ * 其次检查BST是否有根节点，如果没有，该节点是根节点。
+ * 如果待插入节点不是根节点，先准备遍历BST，找到插入的适当位置。[过程：用一个变量存储当前节点，一层层地遍历BST]
+ * 进入BST后下一步要决定将节点放在哪个地方。找到正确的插入点时会跳出循环。
+ * 查找正确插入点的算法：
+ * >>>>	设根节点为当前节点
+ * >>>>	如果待插入节点保存的数据小于当前节点，则新的当前节点为原节点的左节点，否则设置新的当前节点为原节点的右节点
+ * >>>>	如果当前节点的左节点为null，就将新的节点插入这个位置，退出循环。反之继续执行下一个循环
+ * >>>>	设新的当前节点为原节点的右节点
+ * >>>>	如果当前节点的右节点为null，就将新的节点插入这个位置，退出循环；反之，继续执行下一次循环
+ */
+```javascript
+var insert = function (data){
+	var n = new Node(data, null, null);
+	if (this.root == null){
+		this.root = n;
+	}else {
+		var current = this.root;
+		var parent;
+		while (true){
+			parent = current;
+			if (data < current.data){
+				current = current.left;
+				if (current == null){
+					parent.left = n;break;
+				}
+			}else {
+				current = current.right;
+				if (current == null){
+					parent.right = n;break
+				}
+			}
+		}
+	}
+}

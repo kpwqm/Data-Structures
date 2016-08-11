@@ -7,7 +7,7 @@
 [4.链表 - LinkedList](#linkedlist)  
 [5.字典 - Dictionary](#dictionary)  
 [6.集合 - Set](#set)  
-[7.散列 - Hash](#hash)
+[7.散列 - Hash](#hash)  
 [8.二叉树 - Binary Tree](#binarytree)
 
 

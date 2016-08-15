@@ -85,7 +85,7 @@ g.showGraph();
 
 ####深度优先搜索
 从一条路径的起始顶点开始追溯，直到到达最后一个顶点，然后回溯，继续追溯下一条路径，直到到达最后的顶点，如此往复直到没有路径为止。  
-![Alt text](dfs.png)
+![Alt text](dfs.png)  
 图：深度优先搜索  
 深度优先搜索算法思想如下：  
 访问一个没有访问过的顶点，将它标记为已访问，再递归地去访问在初始顶点的邻接表中其他没有访问过的顶点。  
@@ -120,7 +120,7 @@ var dfs = function (v){
 	//用于输出的if语句在这里不是必须的
 	if (this.adj[v] != undefined)
 		console.log("Visited vertex: " +v);
-	foreach (var w in this.adj[v]){
+	for each (var w in this.adj[v]){
 		if (!this.marker[w]){
 			this.dfs(w);
 		}
@@ -131,7 +131,7 @@ var dfs = function (v){
 ####广度优先搜索
 从第一个顶点开始，尝试访问尽可能靠近它的顶点。其实就是在图上逐层移动。  
 首先检查最靠近第一个顶点的层，再逐渐向下移动到离起始顶点最远的层。
-![Alt text](bfs.png)
+![Alt text](bfs.png)  
 图：广度优先搜索  
 其算法使用了抽象的队列而不是数组来对已访问过的顶点进行排序。其原理如下:  
 1.查找与当前顶点相邻的未访问顶点，将其添加到已访问顶点列表及队列中
@@ -148,7 +148,7 @@ var bfs = function (s){
 		if (typeof(v) == "undefined"){
 			console.log("Visisted vertex: " + v);
 		}
-		foreach (var w in this.adj[v]){
+		for each (var w in this.adj[v]){
 			if (!this.marker[w]){
 				this.edgeTo[w] = v;
 				this.marker[w] = true;

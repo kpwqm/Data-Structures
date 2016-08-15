@@ -87,7 +87,7 @@ var factorial =  function (n){
 列表用于数据结构不那么复杂的情况，例如当不需要在一个很长的序列中查找元素或者排序时，列表显得龙为有用。
 
 
- ###列表List类的实现代码
+ ###列表List类的实现代码  
  ```javascript
 var append = function (element){	//给列表添加元素
 	this.dataStore[this.listSize++] = element;

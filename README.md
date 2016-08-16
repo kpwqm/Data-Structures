@@ -1154,4 +1154,123 @@ var bfs = function (s){
 		}
 	}
 }
+//demo
+var g = new Graph(5);
+g.addEdge(0,1);
+g.addEdge(0,2);
+g.addEdge(1,3);
+g.addEdge(2,4);
+g.showGraph();
+g.bfs(0);
+```
+
+###查找最短路径
+要查找最短路径，需要修改广度优先搜索算法来记录从一个顶点到另一个顶点的路径。  
+首先需要一个数组来保存从一个顶点到下一个顶点的所有边(命名为edgeTo)。每次都会遇到一个没有标记的顶点，除了对它进行标记外，还会从邻接列表中正在搜索的顶点添加一条边到这个顶点。  
+相应代码如下：
+```javascript
+var Graph = function (v){
+	this.vertices = v;
+	this.edges = 0;
+	this.adj = [];
+	for (var i = 0; i < this.vertices; i++){
+		this.adj[i] = [];
+		this.adj[i].push(" ");
+	}
+	this.addEdge = addEdge;
+	this.showGraph = showGraph;
+	this.marker = [];
+	for (var i = 0; i < this.vertices; i++){
+		this.marker[i] = false;
+	}
+	this.edgeTo = [];
+	this.pathTo = pathTo;
+	this.hasPathTo = hasPathTo;
+}
+var bfs = function (s){
+	var queue = [];
+	this.marker[s] = true;
+	queue.push(s);	//添加到队尾
+	while (queue.length > 0){
+		var v = queue.shift();	//从队首移除
+		if (typeof(v) == "undefined"){
+			console.log("Visisted vertex: " + v);
+		}
+		for each (var w in this.adj[v]){
+			if (!this.marker[w]){
+				this.edgeTo[w] = v;
+				this.marker[w] = true;
+				queue.push(w);
+			}
+		}
+	}
+}
+//pathTo() - 用于展示图中连接到不同顶点的路径
+var pathTo = function (v){
+	var source = 0;
+	if (!this.hasPathTo(v)){
+		return undefined;
+	}
+	var path = [];
+	for (var i = v; i != source; i = this.edgeTo[i]){
+		path.push(i)
+	}
+	//path.push(s);
+	return path;
+}
+var hasPathTo = function (v){
+	return this.marker[v];
+}
+
+//demo
+var g = new Graph(5);
+g.addEdge(0,1);
+g.addEdge(0,2);
+g.addEdge(1,3);
+g.addEdge(2,4);
+var vertex = 4;
+var paths = g.pathTo(vertex);
+while (paths.length > 0){
+	if (paths.length > 1){
+		console.log(paths.pop() + '-');
+	}else{
+		console.log(paths.pop());
+	}
+}
+//输出 0-2-4
+```
+
+####拓扑排序
+拓扑排序会对有向图的所有顶点进行排序，使有向边从前面的顶点指向后面的顶点。  
+拓扑排序算法与深度优先搜索类似。不同之处是拓扑排序算法不会立即输出已访问的顶点，而是访问当前顶点邻接表中的所有相邻顶点，直到这个列表穷尽时才将当前顶点压入栈中。  
+算法分为两个函数实现：topSort()和topSortHelper().  
+递归函数topSortHelper()，这个函数会将当前顶点标记为已访问，然后递归访问当前顶点邻接表中的每个相邻顶点，标记这些顶点为已访问。最后将当前顶点压入栈。
+```javascript
+var topSort = function (){
+	var stack = [];
+	var visited = [];
+	for (var i = 0; i < this.vertices; i++){
+		visited[i] = false;
+	}
+	for (var i = 0; i < this.vertices; i++){
+		if (visited[i] === false){
+			this.topSortHelper(i, visited, stack);
+		}
+	}
+	for (var i = 0, l = stack.length; i < l; i++){
+		if (stack[i] != undefined && stack[i] != false){
+			console.log(this.vertexList[stack[i]]);
+		}
+	}
+}
+
+var topSortHelper = function (v, visited, stack){
+	visited[v] = true;
+	this.adj[v].forEach(function (w){
+		if (!visited[w]){
+			this.topSortHelper(visited[w], visited, stack);
+		}
+	})
+	stack.push(v);
+}
 ```

@@ -279,4 +279,132 @@ var topSortHelper = function (v, visited, stack){
 }
 ```
 
+下面是整个Graph类的定义：
+```javascript
+var Graph = function (v){
+	this.vertices = v;
+	this.vertexList = [];
+	this.edges = 0;
+	this.adj = [];
+	for (var i = 0; i < this.vertices; i++){
+		this.adj[i] = [];
+		this.adj[i].push("");
+	}
+	this.addEdge = addEdge;
+	this.showGraph = showGraph;
+	this.dfs = dfs;
+	this.marked = [];
+	for (var i = 0; i < this.vertices; i++){
+		this.marked[i] = false;
+	}
+	this.bfs = bfs;
+	this.edgeTo = [];
+	this.hasPathTo = hasPathTo;
+	this.topSorthelper = topSortHelper;
+	this.topSort = topSort;
+}
+var topSort = function (){
+	var stack = [];
+	var visited = [];
+	for (var i = 0; i < this.vertices; i++){
+		visited[i] = false;
+	}
+	for (var i = 0, l = stack.length; i < l; i++){
+		if (visited[i] == false){
+			this.topSortHelper(i, visited, stack);
+		}
+	}
+	for (var i = 0, l = stack.length; i < l; i++){
+		if (stack[i] != undefined && stack[i] != false){
+			console.log(this.vertexList[stack[i]]);
+		}
+	}
+}
+var topSortHelper = function (v, visited, stack){
+	visited[v] = true;
+	this.adj[v].forEach(function (w){
+		if (!visited[w]){
+			this.topSortHelper(visited[w], visited, stack);
+		}
+	})
+	stack.push(v);
+}
+var addEdge = function (v, w){
+	this.adj[v].push(w);
+	this.adj[w].push(v);
+	this.edges++;
+}
+/*var showGraph = function (){
+	for (var  i = 0; i < this.vertices; i++){
+		console.log(i + "->");
+		for (var j = 0; j < this.vertices; j++){
+			if (this.adj[i][j] != undefined){
+				console.log(this.adj[i][j] + " ");
+			}
+		}
+		console.log();
+	}
+}*/
+// 用于显示符号名字而非数字
+var showGraph = function (){
+	var visited = [];
+	for (var i = 0; i < this.vertices; i++){
+		console.log(this.vertexList[i] + " -> ");
+		visited.push(this.vertexList[i]);
+		for (var j = 0; j < this.vertices; j++){
+			if (this.adj[i][j] != undefined){
+				if (visited.indexOf(this.vertexList[j]) < 0){
+					console.log(this.vertexlist[j] + " ");
+				}
+			}
+		}
+		console.log();
+		visited.pop();
+	}
+}
+var bfs = function (s){
+	var queue = [];
+	this.marked[s] = true;
+	queue.unshift(s);
+	while (queue.length > 0){
+		var v = queue.shift();
+		if (typeof(v) != 'string'){
+			console.log('Visited vertex:' + v);
+		}
+		this.adj[v].forEach(function (w){
+			if (!this.marked[w]){
+				this.edgeTo[w] = v;
+				this.marked[w] = true;
+				queue.unshift(w);
+			}
+		})
+	}
+}
+var hasPathTo = function (v){
+	return this.marked[v];
+}
+var pathTo = function (v){
+	var source = 0;
+	if (!this.hasPathTo(v)){
+		return undefined;
+	}
+	var path = [];
+	for (var i = v; i != source; i = this.edgeTo[i]){
+		path.push(i);
+	}
+	path.push(s);
+	return path;
+}
+//demo
+var g = new Graph(6);
+g.addEdge(1,2);
+g.addEdge(2,5);
+g.addEdge(1,3);
+g.addEdge(1,4);
+g.addEdge(0,1);
+g.vertexList = ["CS1", "CS2", "DataStructures", "Assembly Language", "Operating System", "Algorithms"];
+g.showGraph();
+g.topSort();
+```
+
 

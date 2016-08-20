@@ -54,3 +54,19 @@ var binSearch = function (arr, data){
 	}
 	return -1;
 }
+/**
+ * [insertionSort - 查找文本数据]
+ */
+var insertionSort = function (arr){
+	var temp, inner;
+	for (var outer = 1, l = arr.length; outer <= l-1;outer++){
+		temp = arr[outer];
+		inner = outer;
+		while (inner > 0 && (arr[inner - 1] >= temp)){
+			arr[inner] = arr[inner - 1];
+			inner --;
+		}
+		arr[inner] = temp;
+	}
+}
+//面向大型数据集的排序，处理大数据集时二分查找要比顺序查找速度快

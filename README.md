@@ -11,7 +11,8 @@
 [8.二叉树 - Binary Tree](#binarytree)  
 [9.图 - Graph](#graph)  
 [10.排序 - Sort](#sort)  
-[11.查找 - Search](#search)
+[11.查找 - Search](#search)  
+[12.进阶 - Forward](#forward)  
 
 
 <a name="stack"></a>
@@ -1745,3 +1746,214 @@ var insertionSort = function (arr){
 }
 ```
 面向大型数据集的排序，处理大数据集时二分查找要比顺序查找速度快
+
+[12.进阶 - Forward](#forward)  
+
+
+<a name="forward"></a>
+##进阶
+在此部分学习两个知识点：*动态规划* 和 *贪心算法* 。   
+###动态规划
+有时被认为是与递归相反的解决方案。递归是从顶部开始将问题分解，通过解决掉所有分解出小问题的方式，来解决整个问题。动态规划解决方案从底部开始解决问题，将所有小问题解决掉，然后合并成一个整体解决方案，从而解决掉整个大问题。  
+动态规划方案通常会使用一个数组来建立一张表，用于存放被分解成众多子问题的解。当算法执行完毕，最终的解将会在这个表中很明显的地方被找到。  
+
+####使用动态规划实现斐波那契数列
+使用递归实现：
+```javascript
+var recurFib = function (n){
+	if (n < 2){
+		return n;
+	}else{
+		return recurFib(n - 1) + recurFib(n - 2);
+	}
+}
+```
+使用动态规划实现：  
+使用动态规划设计的算法从它能解决的最简单的子问题开始，继而通过得到的解，去解决其他更复杂的子问题，直到整个问题都被解决。所有子问题的解通常被存储在一个数组里以便于访问。
+```javascript
+/**
+ * [dynFib() - 使用动态规划实现斐波那契数列]
+ * 在数组val[]中保存中间结果。
+ * 如果计算的斐波那契数是1或者2，那么判断语句返回1。
+ * 否则数值1和数值2将被保存在val[]中1和2的位置。循环将会从3到输入的参数之间进行遍历，将数组的每个元素赋值为前两个元素之和
+ * 循环结束数组的最后一个元素值即为最终计算得到的斐波那契数值(函数返回值)
+ * 
+ */
+var dynFib = function(n){
+	var val = [];
+	for (var i = 0; i <= n; i++){
+		val[i] = 0;
+	}
+	if (n == 1 || n == 2){
+		return 1;
+	}else {
+		val[1] = 1;
+		val[2] = 2;
+		for (var i = 3; i <= n; i++){
+			val[i] = val[i-1] + val[i-2];
+		}
+		return val[n-1];
+	}
+}
+```
+
+####寻找最长公共子串
+寻找两个字符串的最长公共子串。  
+首先从暴力方式开始去解决这个问题：  
+给出两个字符串A和B，我们可以通过从A的第一个字符开始与B的对应的每一个字符进行比对的方式找到它们的最长公共子串。如果此时没有找到匹配的字母，则移动到A的第二个字符处，然后从B的第一个字符处进行比对，以此类推。  
+
+然后我们需要换一种方式，动态规划，去实现这类问题。  
+使用一个二维数组存储两个字符串相同位置的字符比较结果。初始化时该数组的每一个元素被设置为0.每次在这两个数组的相同位置发现了匹配，就将数组对应行和列的元素加1，否则保持为0。  
+按照这样，一个变量会持续记录下找到了多少个匹配项。当算法执行完毕时，这个变量会结合一个索引变量来获得最长公共子串。  
+```javascript
+/**
+ * [lcs() - 寻找两个字符串的最长公共子串]
+ * 第一部分初始化了两个变量以及一个二维数组。多数语言对二维数组的声明都很简单，但在javascript中需要很费劲地在一个数组中定义另一个数组，这样才能声明一个二维数组。
+ * 
+ * 第二部分构建了用于保存字符匹配记录的表。数组的第一个元素总是被设置为0.如果两个字符串相应位置的字符进行了匹配，当前数组元素的值将被设置为前一次循环中数组元素保存的值加1.
+ * 接下来算法移动到下一个位置，由于此时两个字符仍被匹配，当前数组元素将被设置为2(1+1).
+ * 由于两个字符串的最后一个字符不匹配，所以最长公共子串的长度是2.最后如果变量max的值比现在存储在数组中的当前元素要小，max的值将被赋值给这个元素，变量index的值将被设置为i的当前值。
+ * 这两个变量将在函数的最后一部分用于确定从哪里开始获取最长公共子串。
+ *
+ * 最后一部分代码用于确认从哪里开始构建这个最长公共子串。以变量index减去变量max的差值作为起始点，以变量max的值作为终点。
+ */
+var lcs = function(word1, word2){
+	var max = 0;
+	var index = 0;
+	var lcsarr = new Array(word1.length + 1);
+	for (var i = 0, l = word1.length; i <= l+1; i++){
+		lcsarr[i] = new Array(word2.length + 1);
+		for (var j = 0, len = word2.length; j <= len+1; j++){
+			lcsarr[i][j] = 0;
+		}
+	}
+	for (var i = 0, l = word1.length; i <= l; i++){
+		for (var j = 0, len = word2.length; j <= len; j++){
+			if (i === 0 || j === 0){
+				lcsarr[i][j] = 0;
+			}else{
+				if (word1[i - 1] == word2[j - 2]){
+					lcsarr[i][j] = lcsarr[i - 1][j - 1] + 1;
+				}else{
+					lcsarr[i][j] = 0;
+				}
+			}
+			if (max < lcsarr[i][j]){
+				max = lcsarr[i][j];
+				index = i;
+			}
+		}
+	}
+	var str = "";
+	if (max === 0){
+		return "";
+	}else{
+		for (var i = index - max; i <= max; i++){
+			str += word2[i];
+		}
+		return str;
+	}
+}
+```
+
+```javascript
+var max = function (a, b){
+	return (a > b) ? a : b;
+}
+// dKnapsack() - 动态规划决定背包问题
+var dKnapsack = function (capacity, size, value, n){
+	var K = [];
+	for (var i = 0; i <= capacity + 1; i++){
+		K[i] = [];
+	}
+	for (var i = 0; i <=n; i++){
+		for (var w = 0; w <= capacity; w++){
+			if (i === 0 || w === 0){
+				K[i][w] = 0;
+			}else if (size[i - 1] <= w){
+				K[i][w] = max(value[i -1] + K[i-1][w-size[i-1]], K[i-1][w]);
+			}else{
+				K[i][w] = K[i-1][w];
+			}
+			console.log(K[i][w] + " ");
+		}
+		console.log();
+	}
+	return K[n][capacity];
+}
+```
+
+###贪心算法
+*贪心算法*是一种以寻找“优质解”为手段从而达成整体解决方案的算法。这些优质的解决方案称为*局部最优解*，将有希望得到正确的最终解决方案，也称*全局最优解*。  
+通常贪心算法会用于那些看起来近乎无法找到完整解决方案的问题，然而出于时间和空间的考虑，次优解也是可以接受的。  
+
+####使用贪心算法实现找零问题
+```javascript
+var makeChange = function (origAmt, coins){
+	var remainAmt = 0;
+	if (origAmt % .25 < origAmt){
+		coins[3] = parseInt(origAmt / .25);
+		remainAmt = origAmt % .25;
+		origAmt = remainAmt;
+	}
+	if (origAmt % .1 < origAmt){
+		coins[2] = parseInt(origAmt / .1);
+		remainAmt = origAmt % .1;
+		origAmt = remainAmt;
+	}
+	if (origAmt % .05 < origAmt){
+		coins[1] = parseInt(origAmt / .05);
+		remainAmt = remainAmt % .05;
+		origAmt = remainAmt;
+	}
+	coins[0] = parseInt(origAmt / .01);
+}
+var showChange = function (coins){
+	if (coins[3] > 0)
+		console.log('25美分的数量 - ' + coins[3] + " - " + coins[3] * .25);
+	if (coins[2] > 0)
+		console.log('10美分的数量 - ' + coins[2] + " - " + coins[2] * .10);
+	if (coins[1] > 0)
+		console.log('5美分的数量 - ' + coins[1] + " - " + coins[1] * .05);
+	if (coins[0] > 0)
+		console.log('1美分的数量 - ' + coins[0] + " - " + coins[0] * .01);
+}
+```
+
+####使用贪心算法实现背包问题
+```javascript
+/**
+ * 如果放入背包的物品从本质上说是连续的，那么就可以使用贪心算法来解决背包问题。
+ * 如果用到的物品是连续的，那么可以简单地通过物品的单价除以单位体积来确定物品的价值。
+ * 在这种情况下的最优解是先价值最高的物品直到该物品装完或者将背包装潢，接着装价值次高的物品，直到装满。
+ * 因此我们不能通过贪心算法来解决离散物品问题(0-1问题)。
+ * 以下算法用以解决部分背包问题：
+ * 1.背包的容量为W，物品的价值为v，重量为w
+ * 2.根据v/w的比率对物品排序
+ * 3.按比率的降序方式来考虑物品
+ * 4.尽可能多地放入每个物品
+ */
+// ksack() - 背包问题的贪心算法解决方案
+var ksack = function (values, weights, capacity){
+	var load = 0;
+	var i = 0;
+	var w = 0;
+	while (load < capacity && i < 4){
+		if (weights[i] <= (capacity - load)){
+			w += values[i];
+			load += weights[i];
+		}else{
+			var r = (capacity - load) / weights[i];
+			w += r * values[i];
+			load += weights[i];
+		}
+		i++;
+	}
+	return w;
+}
+var items = ["A", "B", "C", "D"];
+var values = [50, 140, 60, 60];
+var weights = [5, 20, 10, 12];
+var capacity = 30;
+console.log(ksack(values, weights, capacity));	//显示220
+```

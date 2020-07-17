@@ -1712,28 +1712,34 @@ var shellSort1 = function (){
  * 创建两个数组，一个用来存放比基准值小的元素，另一个存放比基准大的元素
  * 当递归结束时，再将较大的数组和较小的数组连接起来
  */
-var qSort = function (arr){
-	if(arr.length == 0){
-		return [];
-	}
-	var left = [];
-	var right = [];
-	var pivot = arr[0];
-	for (var i = 1; i < arr.length; i++){
-		if (arr[i] < pivot){
-			left.push(arr[i]);
-		}else{
-			right.push(arr[i]);
-		}
-	}
-	return qSort(left).concat(pivot, qSort(right));
+let arr = new Array(1024);
+let i = 0;
+while (i < 1024) {
+  arr[i] = parseInt(Math.random() * 1000);
+  i++;
 }
-var a = [];
-for (var i = 0; i < 10; i++){
-	a[i] = Math.floor((Math.random() * 100) + 1);
+
+const quickSort = function (arr){
+  if (arr.length <=1) return arr;
+  
+  let pivotIndex = Math.floor(arr.length/2)
+  let pivot = arr.splice(pivotIndex, 1)[0]
+  let left = [];
+  let right = [];
+  for (const item of arr) {
+    if (item < pivot) {
+      left.push(item)
+    }else {
+      right.push(item)
+    }
+  }
+  let leftRes = quickSort(left)
+  let rightRes = quickSort(right)
+  return leftRes.concat([pivot], rightRes)
 }
-console.log(a);
-console.log(qSort(a));
+
+let res = quickSort(arr)
+console.log('res>> ', res)
 ```
 
 ### 归并排序
